@@ -1,0 +1,43 @@
+<div class="sidebar" [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }">
+  <div class="sidebar-header">
+    <a routerLink="/" class="sidebar-logo">
+      {{ isSidebarCollapsed ? 'JK' : 'JK Tech' }}
+    </a>
+  </div>
+
+  <div class="sidebar-menu">
+    <ul>
+      <ng-container *ngFor="let item of menuItems">
+        <li class="sidebar-menu-item">
+          <a
+            class="sidebar-item"
+            [routerLink]="item.route"
+            routerLinkActive="menu-item-active"
+            (click)="toggleMenuItem(item)"
+          >
+            <i [class]="item.icon"></i>
+            <span class="sidebar-item-text">{{ item.label }}</span>
+            <i
+              *ngIf="item.children && !isSidebarCollapsed"
+              class="fas fa-chevron-down sidebar-item-arrow"
+              [ngClass]="{ rotated: item.isOpen }"
+            ></i>
+          </a>
+
+          <ul *ngIf="item.children && item.isOpen" class="sidebar-submenu">
+            <li *ngFor="let child of item.children">
+              <a
+                [routerLink]="child.route"
+                routerLinkActive="menu-item-active"
+                class="sidebar-item sidebar-subitem"
+              >
+                <i [class]="child.icon"></i>
+                <span class="sidebar-item-text">{{ child.label }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

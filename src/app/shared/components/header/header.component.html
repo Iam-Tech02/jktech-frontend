@@ -1,0 +1,48 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Items -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <!-- User Profile Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <div class="user-circle">
+              {{ userInitials }}
+            </div>
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="userDropdown"
+          >
+            <li>
+              <a class="dropdown-item" [routerLink]="'/profile'"
+                >View Profile</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

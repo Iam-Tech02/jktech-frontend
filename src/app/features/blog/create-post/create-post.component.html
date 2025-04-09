@@ -1,0 +1,71 @@
+<!-- Create Post Section -->
+<section class="bg-light p-3 p-md-4 p-xl-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+            <div class="card border border-light-subtle rounded-4">
+            <div class="card-body p-3 p-md-4 p-xl-5">
+              <div class="text-center mb-5">
+                <h4>Create a New Post</h4>
+              </div>
+  
+              <form [formGroup]="postForm" (ngSubmit)="createPost()">
+                <div class="row gy-3 overflow-hidden">
+                  <!-- Title Field -->
+                  <div class="col-12">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        formControlName="title"
+                        placeholder="Enter title"
+                        [class.is-invalid]="f['title'].invalid && f['title'].touched"
+                      />
+                      <label for="title">Title</label>
+                      <div *ngIf="f['title'].invalid && f['title'].touched" class="invalid-feedback">
+                        <span *ngIf="f['title'].errors?.['required']">Title is required.</span>
+                        <span *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters long.</span>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Description Field -->
+                  <div class="col-12">
+                    <div class="form-floating mb-3">
+                      <textarea
+                        class="form-control"
+                        id="description"
+                        formControlName="description"
+                        placeholder="Enter description"
+                        rows="4"
+                        [class.is-invalid]="f['description'].invalid && f['description'].touched"
+                      ></textarea>
+                      <label for="description">Description</label>
+                      <div *ngIf="f['description'].invalid && f['description'].touched" class="invalid-feedback">
+                        <span *ngIf="f['description'].errors?.['required']">Description is required.</span>
+                        <span *ngIf="f['description'].errors?.['minlength']">
+                          Description must be at least 10 characters long.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Submit Button -->
+                  <div class="col-12">
+                    <div class="d-grid">
+                      <button class="btn bsb-btn-xl btn-primary" type="submit" [disabled]="postForm.invalid">
+                        Create Post
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
