@@ -1,26 +1,49 @@
 <div class="container py-4">
-  <div class="row align-items-center">
+  <div class="row align-items-center mb-4">
     <div class="col-md-6">
-      <h2 class="pb-3 text-primary fw-bold">Post Details</h2>
+      <h2 class="pb-3 text-primary fw-bold">Blog Details</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-outline-primary" routerLink="/dashboard">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+      </button>
     </div>
   </div>
 
-  <div class="card shadow-sm border-0 rounded-3">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading blog details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <!-- Blog Content -->
+  <div *ngIf="!loading && !error && blog" class="card shadow-sm">
     <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Blog Information</h4>
+      <h4 class="mb-0">{{ blog.title }}</h4>
     </div>
-
     <div class="card-body p-4">
-      <ng-container *ngIf="blog; else noItems">
-        <h3 class="fw-bold text-dark">{{ blog.title }}</h3>
-        <p class="text-muted">{{ blog.content }}</p>
-      </ng-container>
+      <div class="mb-4">
+        <h5 class="text-muted">Brief</h5>
+        <p>{{ blog.brief }}</p>
+      </div>
+      <div class="mb-4">
+        <h5 class="text-muted">About</h5>
+        <p>{{ blog.about }}</p>
+      </div>
+      <div class="text-muted">
+        <small>Created: {{ blog.createdAt | date:'medium' }}</small>
+        <small *ngIf="blog.updatedAt !== blog.createdAt" class="ms-3">
+          (Updated: {{ blog.updatedAt | date:'medium' }})
+        </small>
+      </div>
     </div>
   </div>
-
-  <ng-template #noItems>
-    <div class="alert alert-warning text-center mt-3" role="alert">
-      <i class="fa-solid fa-exclamation-circle"></i> No items available.
-    </div>
-  </ng-template>
 </div>

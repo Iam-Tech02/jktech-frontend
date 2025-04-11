@@ -30,32 +30,46 @@
                     </div>
                   </div>
   
-                  <!-- Description Field -->
+                  <!-- Brief Field -->
                   <div class="col-12">
                     <div class="form-floating mb-3">
                       <textarea
                         class="form-control"
-                        id="description"
-                        formControlName="description"
-                        placeholder="Enter description"
+                        id="brief"
+                        formControlName="brief"
+                        placeholder="Enter brief"
                         rows="4"
-                        [class.is-invalid]="f['description'].invalid && f['description'].touched"
+                        [class.is-invalid]="f['brief'].invalid && f['brief'].touched"
                       ></textarea>
-                      <label for="description">Description</label>
-                      <div *ngIf="f['description'].invalid && f['description'].touched" class="invalid-feedback">
-                        <span *ngIf="f['description'].errors?.['required']">Description is required.</span>
-                        <span *ngIf="f['description'].errors?.['minlength']">
-                          Description must be at least 10 characters long.
+                      <label for="brief">Brief</label>
+                      <div *ngIf="f['brief'].invalid && f['brief'].touched" class="invalid-feedback">
+                        <span *ngIf="f['brief'].errors?.['required']">Brief is required.</span>
+                        <span *ngIf="f['brief'].errors?.['minlength']">
+                          Brief must be at least 10 characters long.
                         </span>
                       </div>
+                    </div>
+                  </div>
+
+                  <!-- About Field -->
+                  <div class="col-12">
+                    <div class="form-floating mb-3">
+                      <textarea
+                        class="form-control"
+                        id="about"
+                        formControlName="about"
+                        placeholder="Enter about"
+                        rows="4"
+                      ></textarea>
+                      <label for="about">About</label>
                     </div>
                   </div>
   
                   <!-- Submit Button -->
                   <div class="col-12">
                     <div class="d-grid">
-                      <button class="btn bsb-btn-xl btn-primary" type="submit" [disabled]="postForm.invalid">
-                        Create Post
+                      <button class="btn btn-primary btn-lg" type="submit" [disabled]="isSubmitting">
+                        {{ isSubmitting ? 'Creating...' : 'Create Post' }}
                       </button>
                     </div>
                   </div>

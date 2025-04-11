@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FirebaseService } from '../../../core/services/firebase.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,10 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   userInitials: string = '';
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private firebaseService: FirebaseService
+  ) {
     this.setUserInitials();
   }
 
@@ -19,7 +23,6 @@ export class HeaderComponent {
   }
 
   logout() {
-    console.log('Logging out...');
-    this.router.navigate(['/login']);
+    this.firebaseService.firebaseLogout();
   }
 }

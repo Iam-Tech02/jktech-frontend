@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from 'src/app/core/services/api.service';
+import { Router } from '@angular/router';
+import { BlogService } from 'src/app/core/services/blog.service';
 
 @Component({
   selector: 'app-create-post',
@@ -9,11 +10,18 @@ import { ApiService } from 'src/app/core/services/api.service';
 })
 export class CreatePostComponent {
   postForm!: FormGroup;
+  isSubmitting = false;
+  error: string | null = null;
 
-  constructor(private fb: FormBuilder, private apiService: ApiService) {
+  constructor(
+    private fb: FormBuilder, 
+    private blogService: BlogService,
+    private router: Router
+  ) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]]
+      brief: ['', [Validators.required, Validators.minLength(10)]],
+      about: ['']
     });
   }
 
@@ -26,16 +34,16 @@ export class CreatePostComponent {
       return;
     }
 
-    const requestData = this.postForm.value;
+    this.isSubmitting = true;
+    this.error = null;
 
-    this.apiService.apiRequest('POST', 'posts/create', requestData).subscribe({
-      next: (response) => {
-        console.log('Post Created Successfully:', response);
-        alert('Post Created Successfully!');
+    this.blogService.createBlog(this.postForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        console.error('Post Creation Failed:', error);
-        alert('Post Creation Failed!');
+        this.error = error.message;
+        this.isSubmitting = false;
       }
     });
   }

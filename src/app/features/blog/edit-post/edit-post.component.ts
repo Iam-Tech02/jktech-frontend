@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ApiService } from "src/app/core/services/api.service";
+import { BlogService, Blog } from "src/app/core/services/blog.service";
 
 @Component({
   selector: "app-edit-post",
@@ -9,64 +9,79 @@ import { ApiService } from "src/app/core/services/api.service";
   styleUrls: ["./edit-post.component.scss"],
 })
 export class EditPostComponent implements OnInit {
-  postId!: number;
-  postForm!: FormGroup;
+  editForm: FormGroup;
+  postId: number | null = null;
+  loading = true;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
-    private apiService: ApiService
+    private blogService: BlogService
   ) {
-    this.postForm = this.fb.group({
+    this.editForm = this.fb.group({
       title: ["", [Validators.required, Validators.minLength(3)]],
-      description: ["", [Validators.required, Validators.minLength(10)]],
+      brief: ["", [Validators.required, Validators.minLength(10)]],
+      about: [""]
     });
   }
 
-  get f() {
-    return this.postForm.controls;
+  ngOnInit() {
+    const id = Number(this.route.snapshot.paramMap.get("id"));
+    if (id) {
+      this.postId = id;
+      this.loadBlog(id);
+    }
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get("id");
-      if (id) {
-        this.postId = +id;
-        this.loadPostData();
+  loadBlog(id: number) {
+    this.loading = true;
+    this.error = null;
+
+    this.blogService.getBlog(id).subscribe({
+      next: (response) => {
+        const blog = response.result;
+        this.editForm.patchValue({
+          title: blog.title,
+          brief: blog.brief,
+          about: blog.about
+        });
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = error.message || 'Failed to load blog';
+        this.loading = false;
       }
     });
   }
 
-  loadPostData(): void {
-    this.apiService.apiRequest("GET", `posts/${this.postId}`).subscribe({
-      next: (post) => {
-        this.postForm.patchValue(post);
-      },
-      error: (error) => {
-        console.error("Error fetching post:", error);
-        alert("Failed to load post data.");
-      },
-    });
+  get f() {
+    return this.editForm.controls;
   }
 
-  updatePost(): void {
-    if (this.postForm.invalid) {
+  onSubmit() {
+    if (this.editForm.invalid || !this.postId) {
       return;
     }
 
-    const requestData = this.postForm.value;
+    this.loading = true;
+    this.error = null;
 
-    this.apiService
-      .apiRequest("PUT", `posts/update/${this.postId}`, requestData)
-      .subscribe({
-        next: (response) => {
-          console.log("Post Updated Successfully:", response);
-          alert("Post Updated Successfully!");
-        },
-        error: (error) => {
-          console.error("Post Update Failed:", error);
-          alert("Post Update Failed!");
-        },
-      });
+    this.blogService.updateBlog(this.postId, this.editForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['/blog', this.postId]);
+      },
+      error: (error: Error) => {
+        this.error = error.message || 'Failed to update blog';
+        this.loading = false;
+      }
+    });
+  }
+
+  onCancel() {
+    if (this.postId) {
+      this.router.navigate(['/blog', this.postId]);
+    }
   }
 }
