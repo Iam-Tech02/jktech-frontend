@@ -4,13 +4,17 @@
       <div class="col-md-4">
         <div class="card">
           <img
-            src="https://via.placeholder.com/150"
+            [src]="userProfile?.photoURL || 'https://via.placeholder.com/150'"
             class="card-img-top"
             alt="Profile Picture"
           />
           <div class="card-body text-center">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">Web Developer</p>
+            <h5 class="card-title">
+              {{ userProfile?.name || 'John Doe' }}
+            </h5>
+            <p class="card-text">
+              {{ userProfile?.provider ? (userProfile.provider | titlecase) + ' User' : 'Web Developer' }}
+            </p>
             <button class="btn btn-primary">Edit Profile</button>
           </div>
         </div>
@@ -32,7 +36,7 @@
                     class="form-control"
                     id="name"
                     placeholder="Enter Full Name"
-                    value="John Doe"
+                    [value]="userProfile?.name || 'John Doe'"
                   />
                 </div>
               </div>
@@ -44,7 +48,7 @@
                     class="form-control"
                     id="email"
                     placeholder="Enter Email"
-                    value="johndoe@example.com"
+                    [value]="userProfile?.email || 'johndoe@example.com'"
                   />
                 </div>
               </div>
