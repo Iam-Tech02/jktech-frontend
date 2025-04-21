@@ -53,7 +53,7 @@ export class PostDetailComponent implements OnInit {
         },
         error: (error) => {
           this.error = error.message || 'Failed to delete blog';
-          this.toastr.error(this.error);  // ✅ Error toast
+          this.toastr.error(this.error ?? undefined);  // ✅ Error toast
         }
       });
     } else {
