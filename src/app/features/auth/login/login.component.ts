@@ -45,8 +45,8 @@ export class LoginComponent {
       };
 
       this.firebaseService.firebaseOAuthLogin(credentials).subscribe({
-        next: (res) => {
-          this.saveLoginData(credentials.id, 'google');
+        next: (res:any) => {
+          this.saveLoginData(res.user.id);
           this.toastr.success('Logged in with Google successfully!');
           this.router.navigate(['/dashboard']);
         },
@@ -73,8 +73,8 @@ export class LoginComponent {
       };
 
       this.firebaseService.firebaseOAuthLogin(credentials).subscribe({
-        next: () => {
-          this.saveLoginData(credentials.id, 'facebook');
+        next: (res:any) => {
+          this.saveLoginData(res.user.id);
           this.toastr.success('Logged in with Facebook successfully!');
           this.router.navigate(['/dashboard']);
         },
@@ -98,9 +98,8 @@ export class LoginComponent {
     const requestData = this.loginForm.value;
 
     this.apiService.apiRequest('POST', 'login', requestData).subscribe({
-      next: (response) => {
-        console.log('Login Successful:', response);
-        this.saveLoginData(response.userId, 'email-password');
+      next: (res) => {
+        this.saveLoginData(res.user.id);
         this.toastr.success('Login Successful!');
         this.router.navigate(['/dashboard']);
       },
@@ -111,9 +110,8 @@ export class LoginComponent {
     });
   }
 
-  saveLoginData(id: string, loginType: string) {
-    localStorage.setItem('userId', id);
-    localStorage.setItem('loginType', loginType);
+  saveLoginData(id: number) {
+    localStorage.setItem('userId', String(id));
   }
 }
 

@@ -32,7 +32,6 @@ export class DashboardComponent implements OnInit {
     this.blogService.getBlogs().subscribe({
       next: (response) => {
         this.blogs = response.result;
-        console.log(this.blogs);
         this.loading = false;
       },
       error: (error) => {

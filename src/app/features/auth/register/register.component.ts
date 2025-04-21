@@ -42,7 +42,6 @@ export class RegisterComponent {
 
     this.apiService.apiRequest('POST', 'register', requestData).subscribe({
       next: (response) => {
-        console.log('Registration Successful:', response);
         alert('Registration Successful! Please log in.');
       },
       error: (error) => {
