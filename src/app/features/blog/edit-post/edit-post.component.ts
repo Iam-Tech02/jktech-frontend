@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { BlogService, Blog } from "src/app/core/services/blog.service";
+import { BlogService } from "src/app/core/services/blog.service";
+import { ToastrService } from "ngx-toastr";  // ✅ Import ToastrService
 
 @Component({
   selector: "app-edit-post",
@@ -18,7 +19,8 @@ export class EditPostComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private toastr: ToastrService   // ✅ Inject Toastr
   ) {
     this.editForm = this.fb.group({
       title: ["", [Validators.required, Validators.minLength(3)]],
@@ -51,6 +53,7 @@ export class EditPostComponent implements OnInit {
       },
       error: (error) => {
         this.error = error.message || 'Failed to load blog';
+        this.toastr.error(this.error ?? 'An unknown error occurred');  // ✅ Error toast
         this.loading = false;
       }
     });
@@ -62,6 +65,7 @@ export class EditPostComponent implements OnInit {
 
   onSubmit() {
     if (this.editForm.invalid || !this.postId) {
+      this.toastr.warning('Please fix the form errors before submitting.'); // ✅ Warn if invalid
       return;
     }
 
@@ -70,10 +74,12 @@ export class EditPostComponent implements OnInit {
 
     this.blogService.updateBlog(this.postId, this.editForm.value).subscribe({
       next: () => {
+        this.toastr.success('Post updated successfully!'); // ✅ Success toast
         this.router.navigate(['/blog', this.postId]);
       },
       error: (error: Error) => {
         this.error = error.message || 'Failed to update blog';
+        this.toastr.error(this.error);  // ✅ Error toast
         this.loading = false;
       }
     });

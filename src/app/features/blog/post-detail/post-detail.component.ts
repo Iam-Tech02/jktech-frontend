@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogService, Blog } from 'src/app/core/services/blog.service';
+import { ToastrService } from 'ngx-toastr';  // ✅ Import ToastrService
 
 @Component({
   selector: 'app-post-detail',
@@ -15,7 +16,8 @@ export class PostDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private toastr: ToastrService   // ✅ Inject ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +35,7 @@ export class PostDetailComponent implements OnInit {
         },
         error: (error) => {
           this.error = 'Failed to load blog';
+          this.toastr.error(this.error);   // ✅ Error toast
           this.loading = false;
         }
       });
@@ -45,12 +48,16 @@ export class PostDetailComponent implements OnInit {
     if (confirm('Are you sure you want to delete this blog post?')) {
       this.blogService.deleteBlog(this.blog.id).subscribe({
         next: () => {
+          this.toastr.success('Blog deleted successfully!');  // ✅ Success toast
           this.router.navigate(['/blog']);
         },
         error: (error) => {
-          this.error = error.message;
+          this.error = error.message || 'Failed to delete blog';
+          this.toastr.error(this.error);  // ✅ Error toast
         }
       });
+    } else {
+      this.toastr.info('Deletion cancelled.');  // ✅ Optional info toast
     }
   }
 }
