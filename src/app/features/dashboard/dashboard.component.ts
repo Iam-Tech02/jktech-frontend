@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BlogService, Blog } from 'src/app/core/services/blog.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +15,11 @@ export class DashboardComponent implements OnInit {
   error: string | null = null;
   private blogIdToDelete: number | null = null;
 
-  constructor(private blogService: BlogService, private router: Router) {}
+  constructor(
+    private blogService: BlogService, 
+    private router: Router,
+    private toastr: ToastrService   // ✅ Inject Toastr
+  ) {}
 
   ngOnInit() {
     this.loadBlogs();
@@ -32,6 +37,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         this.error = error.message || 'Failed to load blogs';
+        this.toastr.error(this.error ?? 'An unknown error occurred');  // ✅ Show error toast
         this.loading = false;
       }
     });
@@ -65,11 +71,13 @@ export class DashboardComponent implements OnInit {
       this.blogService.deleteBlog(this.blogIdToDelete).subscribe({
         next: () => {
           this.closeDeleteModal();
+          this.toastr.success('Blog deleted successfully!');  // ✅ Success toast
           this.loadBlogs();
         },
         error: (error) => {
           this.error = 'Failed to delete blog';
           this.closeDeleteModal();
+          this.toastr.error(this.error);  // ✅ Error toast
         }
       });
     }

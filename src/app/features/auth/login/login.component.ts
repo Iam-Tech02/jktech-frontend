@@ -5,6 +5,7 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class LoginComponent {
     private firebaseService: FirebaseService,
     private router: Router,
     public fireAuth: AngularFireAuth,
+    private toastr: ToastrService,   // ✅ Inject Toastr
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -33,9 +35,7 @@ export class LoginComponent {
 
   async googleLogin() {
     try {
-      console.log('Starting Google login...');
       const response = await this.fireAuth.signInWithPopup(new GoogleAuthProvider());
-      console.log('Firebase auth response:', response);
       
       const credentials = {
         token: (response.credential as any)?.idToken,
@@ -43,57 +43,53 @@ export class LoginComponent {
         name: response.user?.displayName,
         id: (response.additionalUserInfo?.profile as any)?.id,
       };
-      console.log('Sending credentials to backend:', credentials);
-      
+
       this.firebaseService.firebaseOAuthLogin(credentials).subscribe({
-        next: (response) => {
-          console.log('Backend response:', response);
+        next: (res) => {
+          this.toastr.success('Logged in with Google successfully!');
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Google login failed:', error);
-          console.error('Error details:', {
-            status: error.status,
-            message: error.message,
-            error: error.error
-          });
-          alert('Google login failed! Check console for details.');
+          this.toastr.error('Google login failed! Check console for details.');
         }
       });
     } catch (error) {
       console.error('Google popup failed:', error);
-      console.error('Popup error details:', error);
-      alert('Google popup failed! Check console for details.');
+      this.toastr.error('Google popup failed! Check console for details.');
     }
   }
 
   async facebookLogin() {
     try {
       const response = await this.fireAuth.signInWithPopup(new FacebookAuthProvider());
+      
       const credentials = {
         token: (response.credential as any)?.accessToken,
         email: response.user?.email,
         name: response.user?.displayName,
         id: (response.additionalUserInfo?.profile as any)?.id,
       };
-      
+
       this.firebaseService.firebaseOAuthLogin(credentials).subscribe({
         next: () => {
+          this.toastr.success('Logged in with Facebook successfully!');
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Facebook login failed:', error);
-          alert('Facebook login failed!');
+          this.toastr.error('Facebook login failed! Check console for details.');
         }
       });
     } catch (error) {
       console.error('Facebook popup failed:', error);
-      alert('Facebook popup failed!');
+      this.toastr.error('Facebook popup failed!');
     }
   }
 
   loginUser() {
     if (this.loginForm.invalid) {
+      this.toastr.warning('Please enter valid login credentials.');
       return;
     }
 
@@ -102,11 +98,12 @@ export class LoginComponent {
     this.apiService.apiRequest('POST', 'login', requestData).subscribe({
       next: (response) => {
         console.log('Login Successful:', response);
-        alert('Login Successful!');
+        this.toastr.success('Login Successful!');
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Login Failed:', error);
-        alert('Login Failed!');
+        this.toastr.error('Invalid login details!');
       }
     });
   }
