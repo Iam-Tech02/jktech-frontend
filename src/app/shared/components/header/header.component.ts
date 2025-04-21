@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { FirebaseService } from '../../../core/services/firebase.service';
 
 @Component({
@@ -11,7 +10,6 @@ export class HeaderComponent {
   userInitials: string = '';
 
   constructor(
-    private router: Router,
     private firebaseService: FirebaseService
   ) {
     this.setUserInitials();

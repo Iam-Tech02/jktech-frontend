@@ -22,6 +22,13 @@ const routes: Routes = [
             (m) => m.DashboardModule
           ),
       },
+      {
+        path: "profile",
+        loadChildren: () =>
+          import("../features/profile/profile.module").then(
+            (m) => m.ProfileModule
+          ),
+      },
     ],
   },
 ];
