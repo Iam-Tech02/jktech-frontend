@@ -1,26 +1,44 @@
-import { Component } from '@angular/core';
-import { FirebaseService } from '../../../core/services/firebase.service';
+import { Component } from "@angular/core";
+import { FirebaseService } from "../../../core/services/firebase.service";
+import { ProfileService } from "src/app/core/services/profile.service";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent {
-  userInitials: string = '';
+  userInitials: string = "";
+  userProfile: any;
 
   constructor(
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private profileService: ProfileService
   ) {
-    this.setUserInitials();
+  }
+
+  ngOnInit() {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    this.profileService.getProfile().subscribe((profile) => {
+      this.userProfile = profile.result;
+      this.setUserInitials();
+    });
   }
 
   setUserInitials() {
-    const user = { firstName: 'John', lastName: 'Doe' }; 
-    this.userInitials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    const nameParts = this.userProfile?.name ? this.userProfile.name.split(" ") : 'JOHN DOE'.split(" ");
+    const firstName = nameParts[0];
+    const lastName = nameParts[1] || ''; 
+  
+    this.userInitials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   }
+  
 
   logout() {
     this.firebaseService.firebaseLogout();
   }
+
 }
