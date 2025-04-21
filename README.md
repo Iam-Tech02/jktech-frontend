@@ -1,27 +1,20 @@
-# JktechFrontend
+# 📖 JktechFrontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+This is a modern Angular 16 web application, integrated with Firebase and JWT-based authentication, built for seamless, scalable frontend development.
 
-## Development server
+## 📦 Tech Stack
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Angular 16**: The latest version of Angular for building robust web applications.
+- **AngularFire**: Firebase integration for real-time data handling.
+- **@auth0/angular-jwt**: Provides JWT authentication and token management.
+- **Bootstrap 5**: For responsive and modern UI components.
+- **FontAwesome**: A library of vector icons for use throughout the app.
+- **RxJS**: Reactive programming for managing asynchronous events.
+- **Karma & Jasmine**: For unit testing the application.
 
-## Code scaffolding
+## 🚀 Development Server
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+To run the development server, use:
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+ng serve

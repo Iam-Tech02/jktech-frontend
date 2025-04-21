@@ -12,6 +12,9 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
+
+    console.log('AuthGuard');
+    console.log(this.firebaseService.checkFirebaseAuth());
     if (this.firebaseService.checkFirebaseAuth()) {
       return true;
     }
